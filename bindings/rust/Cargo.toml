@@ -1,0 +1,16 @@
+[package]
+name = "fasttextembed"
+version = "1.0.0"
+edition = "2021"
+description = "Fast, dependency-free text embeddings (BAAI/bge-small-en-v1.5) in pure C"
+license = "MIT"
+authors = ["Cemsina Guzel"]
+repository = "https://github.com/cemsina/fasttextembed"
+keywords = ["embeddings", "bge", "nlp", "vector-search"]
+categories = ["science", "text-processing"]
+
+[build-dependencies]
+cc = "1.0"
+
+# No runtime crate dependencies — the engine is C, the model downloads on first use (via curl).
+[dependencies]

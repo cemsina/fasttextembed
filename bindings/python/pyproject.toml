@@ -1,0 +1,31 @@
+[build-system]
+requires = ["scikit-build-core>=0.8"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "fasttextembed"
+version = "1.0.0"
+description = "Fast, dependency-free text embeddings (BAAI/bge-small-en-v1.5) in pure C"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+authors = [{ name = "Cemsina Guzel" }]
+keywords = ["embeddings", "bge", "vector-search", "nlp", "onnx-free"]
+classifiers = [
+    "Programming Language :: C",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "License :: OSI Approved :: MIT License",
+]
+# Zero runtime Python dependencies — the engine is C, the model downloads on first use.
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/cemsina/fasttextembed"
+
+[tool.scikit-build]
+wheel.packages = ["src/fasttextembed"]
+cmake.version = ">=3.20"
+# Ship the vendored C engine (./csrc, created by vendor.sh) in the sdist so it builds on any
+# platform without the repo. The model is NOT bundled (64 MB) — downloaded on first use.
+sdist.include = ["csrc/**"]

@@ -1,0 +1,4 @@
+hello world	101,7592,2088,102
+the weather is nice and warm today	101,1996,4633,2003,3835,1998,4010,2651,102
+Machine learning turns text into numerical vectors.	101,3698,4083,4332,3793,2046,15973,19019,1012,102
+The quick brown fox jumps over the lazy dog.	101,1996,4248,2829,4419,14523,2058,1996,13971,3899,1012,102

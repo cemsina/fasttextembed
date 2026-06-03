@@ -1,0 +1,38 @@
+{
+  "name": "fasttextembed",
+  "version": "1.0.0",
+  "description": "Fast, dependency-free text embeddings (BAAI/bge-small-en-v1.5) \u2014 pure C compiled to WASM",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "wasm.js",
+    "model.js",
+    "wasm/fte.js",
+    "wasm/fte.wasm",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "bash build.sh",
+    "test": "node test.js",
+    "prepublishOnly": "bash build.sh"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "keywords": [
+    "embeddings",
+    "bge",
+    "bge-small",
+    "nlp",
+    "vector-search",
+    "wasm",
+    "onnx-free"
+  ],
+  "author": "Cemsina Guzel",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cemsina/fasttextembed"
+  },
+  "dependencies": {}
+}

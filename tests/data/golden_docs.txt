@@ -1,0 +1,4 @@
+hello world
+the weather is nice and warm today
+Machine learning turns text into numerical vectors.
+The quick brown fox jumps over the lazy dog.

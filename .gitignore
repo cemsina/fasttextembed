@@ -1,0 +1,43 @@
+.venv/
+build/
+build-prof/
+tokenizer.json
+tests/data/*.onnx
+
+# model.fte and vocab.tsv ARE committed (the model is bundled so the build needs
+# no Python/fastembed/download). Regenerate them with tools/convert.py if needed.
+
+# binding build artifacts
+bindings/rust/target/
+bindings/rust/Cargo.lock
+bindings/js/node_modules/
+bindings/python/build/
+bindings/python/dist/
+bindings/python/*.egg-info/
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# C / native build outputs (top-level stray objects/libs)
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+
+# downloads / temp
+*.part
+*.zip
+corpus_*.txt
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# generated WASM artifacts (built by bindings/js/build.sh; bundled at npm publish time)
+bindings/js/wasm/fte.js
+bindings/js/wasm/fte.wasm
+bindings/python/csrc/
