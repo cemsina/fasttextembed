@@ -1,17 +1,39 @@
 # FastTextEmbed
 
-**Text embedding is the hot path of modern AI.** Agentic and automation systems generate embeddings at
-enormous volume — every document chunk for RAG, every memory write, every tool result, every dedup /
-search / rerank step — easily **millions to billions of vectors**. At that scale the embedding step
-dominates CPU time and the cloud bill, yet most stacks reach for PyTorch or ONNX Runtime, which haul in
-**gigabytes of dependencies** and **hundreds of MB to >1 GB of RAM per worker**. Making embedding *fast
-and cheap* is therefore one of the highest-leverage cost optimizations an AI system can make.
+### The fastest, lightest way to run `BAAI/bge-small-en-v1.5` — pure C, zero dependencies, ~90 MB RAM.
 
-**FastTextEmbed** is a from-scratch, **pure-C, zero-dependency** engine for `BAAI/bge-small-en-v1.5` that
-produces the **same vectors** with the **highest throughput, lowest latency, and lowest memory of any
-mainstream tool** — on Apple Silicon, ARM Linux, and x86 AMD. More embeddings per core, **~90 MB of RAM**,
-no GPU, no dependencies → a dramatically **more cost-effective** way to run embeddings at scale: pack many
-workers per box, fit inside serverless/Lambda limits, and cut the embedding line item on autoscaled agents.
+[![PyPI](https://img.shields.io/pypi/v/fasttextembed?label=PyPI&logo=pypi&logoColor=white)](https://pypi.org/project/fasttextembed/)
+[![npm](https://img.shields.io/npm/v/fasttextembed?label=npm&logo=npm)](https://www.npmjs.com/package/fasttextembed)
+[![crates.io](https://img.shields.io/crates/v/fasttextembed?label=crates.io&logo=rust)](https://crates.io/crates/fasttextembed)
+[![Go](https://img.shields.io/badge/Go-module-00ADD8?logo=go&logoColor=white)](https://pkg.go.dev/github.com/cemsina/fasttextembed/bindings/go)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](#license)
+
+Same 384-dim vectors as the PyTorch/ONNX stacks, but with **up to 2.3× the throughput, the lowest
+latency, and 5–14× less RAM** — callable from **Python, Node, Go, Rust, or C**. No GPU, no PyTorch,
+no ONNX Runtime, nothing else to install.
+
+## Quickstart
+
+```bash
+pip install fasttextembed
+```
+
+```python
+from fasttextembed import TextEmbedding
+
+model = TextEmbedding()                          # model auto-downloads + caches on first use
+vectors = model.embed(["hello world", "fast"])   # list of 384-dim float vectors
+```
+
+That's it. The ~64 MB model downloads once and is cached; there are no other dependencies.
+**[Other languages ↓](#-one-tiny-engine-every-language) · [Benchmarks ↓](#benchmark-top-embedding-tools-same-model-same-corpus) · [How it works ↓](#how-it-works)**
+
+> **Why it exists —** text embedding is the hot path of modern AI: agentic and RAG systems generate
+> **millions to billions of vectors**, and at that scale the embedding step dominates CPU time and the
+> cloud bill. Most stacks reach for PyTorch or ONNX Runtime, which haul in **gigabytes of dependencies**
+> and **hundreds of MB to >1 GB of RAM per worker**. FastTextEmbed is a from-scratch, pure-C engine that
+> produces the **same vectors** far faster and ~5–14× leaner — so you pack many workers per box, fit
+> inside serverless/Lambda limits, and cut the embedding line item on autoscaled agents.
 
 Author: **Cemsina Guzel**
 
