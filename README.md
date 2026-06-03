@@ -18,7 +18,7 @@ no ONNX Runtime, nothing else to install.
 
 Same model, same 384-dim vectors, every language — pick yours and copy-paste:
 
-**🐍 Python** — `pip install fasttextembed`
+**Python** — `pip install fasttextembed`
 
 ```python
 from fasttextembed import TextEmbedding
@@ -27,7 +27,7 @@ model = TextEmbedding()                          # model auto-downloads + caches
 vectors = model.embed(["hello world", "fast"])   # list of 384-dim float vectors
 ```
 
-**🟢 Node / JS** — `npm install fasttextembed`
+**Node / JS** — `npm install fasttextembed`
 
 ```js
 const { TextEmbedding } = require("fasttextembed");
@@ -36,7 +36,7 @@ const m = await TextEmbedding.create();
 const vecs = m.embed(["hello world", "fast"]); // array of 384-dim float vectors
 ```
 
-**🐹 Go** — `go get github.com/cemsina/fasttextembed/bindings/go`
+**Go** — `go get github.com/cemsina/fasttextembed/bindings/go`
 
 ```go
 import fte "github.com/cemsina/fasttextembed/bindings/go"
@@ -46,7 +46,7 @@ defer m.Free()
 vecs := m.Embed([]string{"hello world", "fast"}) // [][]float32, 384-dim
 ```
 
-**🦀 Rust** — `cargo add fasttextembed`
+**Rust** — `cargo add fasttextembed`
 
 ```rust
 use fasttextembed::TextEmbedding;
@@ -55,7 +55,7 @@ let model = TextEmbedding::new()?;
 let vecs = model.embed(&["hello world", "fast"]); // Vec<Vec<f32>>
 ```
 
-**⚙️ C** — link `libfte`, include `fte/fte.h`
+**C** — link `libfte`, include `fte/fte.h`
 
 ```c
 fte_model *m;
