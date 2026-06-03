@@ -153,21 +153,19 @@ The result is the **same embeddings** — cosine ≥ 0.9998 vs ONNX Runtime, and
 
 ## The journey (what we actually solved)
 
-**Chapter one — closing the gap to ONNX Runtime.** The interesting part wasn't the first version — it was catching years of Microsoft optimization. We did it empirically, by profiling, and kept honest notes on what worked and what didn't:
+**Closing the gap to ONNX Runtime** — done empirically, by profiling:
 
-- ✅ **Cache-friendly matmul** ordering: 8 → 68 docs/s.
-- ✅ **fp16 weights + NEON widening**: halved memory bandwidth (`model.fte` 133 → 64 MB).
-- ✅ **Register blocking** (reuse each weight tile across 4 rows): the bottleneck at short sequence lengths.
-- ✅ **Multithreading**: one doc per core (throughput) + intra-doc matmul splitting (latency).
-- ❌ **fp16-accumulate lane-FMA** (ONNX Runtime's exact kernel technique): we _ported it and it made us slower_ — its single-accumulator dependency chain stalls, while our simpler kernel keeps more independent chains. Reverted. (Also: we verified ONNX Runtime uses C++ **intrinsics**, not hand assembly, for fp16 on these CPUs — so there was never an assembly wall.)
-- ✅ **The decisive fix — vectorizing the elementwise ops.** Profiling showed **24% of per-document time was scalar** LayerNorm / SkipLayerNorm / **GELU** (a scalar `tanhf` called ~180k times per doc). Worse, those ran _serially_ while the matmuls were parallelized, so by Amdahl's law they dominated latency. ONNX Runtime vectorizes them; our first version didn't. Adding vectorized `exp`/`tanh` and reductions (NEON + AVX2) cut that 24% → 4%, and cut single-document latency roughly in half. **This is what finally put us ahead of ONNX Runtime on every metric.**
+- ✅ **Cache-friendly, register-blocked matmul** with fp16 weights: the core speedup (8 → 68+ docs/s) at half the memory bandwidth.
+- ✅ **Multithreading**: one doc per core (throughput) + intra-doc splitting (latency).
+- ❌ **fp16-accumulate lane-FMA** (ONNX Runtime's exact kernel): ported it, it was _slower_, reverted.
+- ✅ **The decisive fix — vectorizing the elementwise ops** (LayerNorm, GELU). They were ~24% of per-doc time, scalar, and serial; vectorizing them roughly halved latency and **put us ahead of ONNX Runtime on every metric**.
 
-**Chapter two — shipping it everywhere.** A fast engine nobody can `pip install` isn't useful, so the second half of the work was packaging one C core into four ecosystems without giving up the zero-dependency promise:
+**Then shipping it** — one C core, four ecosystems, still zero runtime dependencies:
 
-- ✅ **Four bindings, one engine**: published **v1.0.1** to **PyPI, npm, crates.io, and Go** — each calling the same C library, each returning matching 384-dim vectors, each with zero runtime dependencies.
-- ✅ **Portable _and_ native JS**: the npm package ships the engine compiled to **WebAssembly** (runs in Node *and* the browser), plus an optional **N-API native addon** that's ~2× faster on Node.
-- ✅ **Prebuilt wheels, no compiler needed**: `pip install fasttextembed` pulls a prebuilt wheel for manylinux (x86_64 + aarch64) and macOS (arm64 + x86_64). The trick was a **portable per-arch SIMD baseline** (AVX2+FMA+F16C on x86, armv8.2-a+fp16 on ARM) instead of `-march=native`, so one wheel stays fast on _any_ CPU of that arch — not just the build machine.
-- ✅ **One-click releases**: cutting a GitHub Release now publishes all four registries automatically (GitHub Actions builds the wheels, the WASM module, and the crate, then tags the Go module).
+- ✅ Published **v1.0.1** to **PyPI, npm, crates.io, and Go**, all returning matching vectors.
+- ✅ JS ships **WASM** (Node + browser) plus an optional **native addon** (~2× faster on Node).
+- ✅ **Prebuilt wheels** (manylinux + macOS) — a portable per-arch SIMD baseline keeps one wheel fast on any CPU.
+- ✅ **One-click releases**: a GitHub Release publishes all four registries automatically.
 
 ## How it works
 
