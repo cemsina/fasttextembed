@@ -1,6 +1,6 @@
 {
   "name": "fasttextembed",
-  "version": "1.0.1",
+  "version": "0.0.0",
   "description": "Fast, dependency-free text embeddings (BAAI/bge-small-en-v1.5) \u2014 pure C compiled to WASM",
   "main": "index.js",
   "files": [

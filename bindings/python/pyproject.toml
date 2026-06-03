@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "fasttextembed"
-version = "1.0.1"
+version = "0.0.0" # placeholder — CI stamps the real version from the release tag (release.yml)
 description = "Fast, dependency-free text embeddings (BAAI/bge-small-en-v1.5) in pure C"
 readme = "README.md"
 requires-python = ">=3.8"

@@ -10,6 +10,11 @@ name: Build wheels
 
 on:
   workflow_call:
+    inputs:
+      version:
+        description: "Version to stamp into the package (e.g. 1.0.2). Empty = use the committed placeholder."
+        type: string
+        default: ""
   workflow_dispatch:
   push:
     paths:
@@ -28,6 +33,14 @@ jobs:
         os: [ubuntu-latest, ubuntu-24.04-arm, macos-14]
     steps:
       - uses: actions/checkout@v4
+
+      - name: Stamp version from release tag
+        if: ${{ inputs.version != '' }}
+        run: |
+          V="${{ inputs.version }}"; V="${V#v}"   # v1.0.2 -> 1.0.2
+          perl -pi -e "s/^version = \".*?\"/version = \"$V\"/" bindings/python/pyproject.toml
+          perl -pi -e "s/^__version__ = \".*?\"/__version__ = \"$V\"/" bindings/python/src/fasttextembed/__init__.py
+          echo "stamped Python version -> $V"
 
       # Copy ../../src + ../../include into bindings/python/csrc so the build is self-contained
       # inside the manylinux container (which only mounts the package directory).
@@ -58,6 +71,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Stamp version from release tag
+        if: ${{ inputs.version != '' }}
+        run: |
+          V="${{ inputs.version }}"; V="${V#v}"
+          perl -pi -e "s/^version = \".*?\"/version = \"$V\"/" bindings/python/pyproject.toml
+          perl -pi -e "s/^__version__ = \".*?\"/__version__ = \"$V\"/" bindings/python/src/fasttextembed/__init__.py
+          echo "stamped Python version -> $V"
       - name: Vendor C engine into the package
         run: bash bindings/python/vendor.sh
       - name: Build sdist
