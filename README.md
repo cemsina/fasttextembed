@@ -1,6 +1,6 @@
 # FastTextEmbed
 
-> ### 🚀 _Ship embeddings, not gigabytes._
+> ### 🚀 _Ship embeddings fast, not gigabytes._
 
 ### The fastest, lightest way to run `BAAI/bge-small-en-v1.5` — pure C, zero dependencies, ~90 MB RAM.
 
@@ -13,6 +13,9 @@
 Same 384-dim vectors as the PyTorch/ONNX stacks, but with **up to 2.3× the throughput, the lowest
 latency, and 5–14× less RAM** — callable from **Python, Node, Go, Rust, or C**. No GPU, no PyTorch,
 no ONNX Runtime, nothing else to install.
+
+`BAAI/bge-small-en-v1.5` is a nice choice for almost 95% of projects — strong retrieval quality at a
+tiny footprint — which is exactly why FastTextEmbed ships it.
 
 ## Quickstart
 
@@ -277,7 +280,6 @@ python tools/plot_results.py                   # regenerate assets/benchmark.png
 - ✅ **Released — v1.0.1 is live on all four registries**: [PyPI](https://pypi.org/project/fasttextembed/) (`pip install fasttextembed`), [npm](https://www.npmjs.com/package/fasttextembed) (`npm install fasttextembed`), [crates.io](https://crates.io/crates/fasttextembed) (`cargo add fasttextembed`), and Go (`go get github.com/cemsina/fasttextembed/bindings/go`) — all returning matching 384-dim vectors.
 - ✅ **Prebuilt pip wheels** for manylinux (x86_64 + aarch64) and macOS (arm64) — no compiler needed. Built in CI with a portable per-arch SIMD baseline.
 - ✅ **JS: WASM + optional native addon** — the npm package runs in Node and the browser; `npm run build:native` enables the ~2× faster N-API path on Node.
-- ⚠️ Default fp16 mode matches ONNX Runtime at cosine ~0.9998 (identical ranking, not bit-identical); build with `-DFTE_FP32_ACCUM` for bit-exact (cosine 0.99999).
 - ⚠️ **No Windows wheels yet** — the engine uses POSIX threads + GCC/Clang SIMD flags; an MSVC port is the remaining packaging work. (A single-threaded fallback exists but is unverified.)
 - Scope is deliberately **one model, text only**. That constraint is the whole point.
 
